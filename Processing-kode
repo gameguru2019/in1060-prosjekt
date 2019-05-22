@@ -5,6 +5,11 @@ HashMap<String,SoundFile> sanger = new HashMap<String, SoundFile>();
 Serial myPort;
 String val;
 float L;
+float vol1;
+float vol2;
+float vol3;
+
+
 SoundFile file;
 SoundFile file2;
 SoundFile file3;
@@ -49,9 +54,7 @@ void setup() {
 spilles = new SoundFile[3];
  
  
- volKnapp1 = 1;
- volKnapp2 = 0.05;
- volKnapp3 = 0.01;
+ 
 
   // Using an enhanced loop to iterate over each entry
 for (Map.Entry me : sanger.entrySet()) {
@@ -72,8 +75,11 @@ void draw() {
   }
   
   if (val != null){
-    spillSang(val);
-  }
+      val = trim(val);
+      hentVolum(val);
+      spillSang(val);
+    }
+  
   
   settVolum1(volKnapp1);
   settVolum2(volKnapp2);
@@ -110,6 +116,27 @@ void settVolum3(float volum){
   }
 }
 
+
+void hentVolum(String val){
+     String[] potMet = split(val, ',');
+      if (potMet[0].equals("pot1")){
+       float vol1 = Float.parseFloat(potMet[1].trim());
+      if(vol1 > 0 &&  vol1 <1023){
+        volKnapp1 = vol1/1023;
+      }
+      
+      }else if (potMet[0].equals("pot2")){
+      float vol2 = Float.parseFloat(potMet[1].trim());
+            if(vol2 > 0 && vol2 < 1023){
+              volKnapp2 = vol2/1023;
+      }
+      }else if (potMet[0].equals("pot3")){
+      float vol3 = Float.parseFloat(potMet[1].trim());
+          if(vol3 > 0 && vol3 < 1023){
+              volKnapp3 = vol3/1023;
+      }
+     }
+}
 
 
 
