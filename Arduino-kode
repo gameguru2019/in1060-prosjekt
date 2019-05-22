@@ -1,0 +1,134 @@
+#include <deprecated.h>
+#include <MFRC522.h>
+#include <MFRC522Extended.h>
+#include <require_cpp11.h>
+
+//Viral Science
+//RFID
+#include <SPI.h>
+ 
+#define SS_PIN_1 10
+#define SS_PIN_2 4
+#define SS_PIN_3 5
+
+#define RST_PIN 9
+
+MFRC522 leser1(SS_PIN_1, RST_PIN);   // Create MFRC522 instance.
+MFRC522 leser2(SS_PIN_2, RST_PIN);   // Create MFRC522 instance.
+MFRC522 leser3(SS_PIN_3, RST_PIN);   // Create MFRC522 instance.
+
+String spillerPaaKort1 = "ingen,ting";
+String spillerPaaKort2 = "ingen,ting";
+String spillerPaaKort3 = "ingen,ting";
+
+char val;
+
+
+
+const unsigned long debounceDelay = 500;
+
+unsigned long previousTime1 = 0;
+unsigned long previousTime2 = 0;
+unsigned long previousTime3 = 0;
+
+
+boolean first = true;
+
+void setup(){
+  Serial.begin(9600);  // Initiate a serial communication
+  SPI.begin();
+  leser1.PCD_Init();   // Initiate MFRC522
+  leser2.PCD_Init();   // Initiate MFRC522
+  leser3.PCD_Init();   // Initiate MFRC522
+         // Initiate  SPI bus
+
+}
+
+void loop() {
+  unsigned long currentTime = millis();
+  sjekkLeser1(currentTime);
+  sjekkLeser2(currentTime);
+  sjekkLeser3(currentTime);
+
+}
+
+
+
+void sjekkLeser1(unsigned long currentTime){
+ 
+  if (!leser1.PICC_IsNewCardPresent() && !leser1.PICC_ReadCardSerial()) {
+    if(currentTime - previousTime1 >= debounceDelay){
+      
+      Serial.println(spillerPaaKort1 + ",Stop");
+      spillerPaaKort1 = "ingen,ting";
+      return;
+    }
+  } else if(leser1.PICC_ReadCardSerial()){
+      
+      String content= "";
+        
+      for (byte i = 0; i < leser1.uid.size; i++) {
+         content.concat(String(leser1.uid.uidByte[i] < 0x10 ? " 0" : " "));
+         content.concat(String(leser1.uid.uidByte[i], HEX));
+      }
+        
+        content.toUpperCase();
+        spillerPaaKort1 = content.substring(1);
+        previousTime1 = currentTime;
+
+    Serial.println(spillerPaaKort1 + ",Play,0");
+  }
+}
+
+  
+
+  void sjekkLeser2(unsigned long currentTime){
+     // Look for new cards
+  if (!leser2.PICC_IsNewCardPresent() && !leser2.PICC_ReadCardSerial()) {
+    if(currentTime - previousTime2 >= debounceDelay){
+    Serial.println(spillerPaaKort2 + ",Stop");
+    spillerPaaKort2 = "ingen,ting";
+
+    return;
+    }
+  }
+   else if(leser2.PICC_ReadCardSerial()){
+        String content= "";
+        
+        for (byte i = 0; i < leser2.uid.size; i++) {
+           content.concat(String(leser2.uid.uidByte[i] < 0x10 ? " 0" : " "));
+           content.concat(String(leser2.uid.uidByte[i], HEX));
+        }
+        
+        content.toUpperCase();
+        spillerPaaKort2 = content.substring(1);
+        previousTime2 = currentTime;
+
+    Serial.println(spillerPaaKort2 + ",Play,1");
+    }
+  }
+
+    void sjekkLeser3(unsigned long currentTime){
+     // Look for new cards
+  if (!leser3.PICC_IsNewCardPresent() && !leser3.PICC_ReadCardSerial()) {
+    if(currentTime - previousTime3 >= debounceDelay){
+    Serial.println(spillerPaaKort3 + ",Stop");
+    spillerPaaKort3 = "ingen,ting";
+    return;
+    }
+  }
+   else if(leser3.PICC_ReadCardSerial()){
+        String content = "";
+        
+        for (byte i = 0; i < leser3.uid.size; i++) {
+           content.concat(String(leser3.uid.uidByte[i] < 0x10 ? " 0" : " "));
+           content.concat(String(leser3.uid.uidByte[i], HEX));
+        }
+        
+        content.toUpperCase();
+        spillerPaaKort3 = content.substring(1);
+        previousTime3 = currentTime;
+
+    Serial.println(spillerPaaKort3 + ",Play,2");
+  }
+  }
