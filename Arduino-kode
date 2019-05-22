@@ -23,7 +23,13 @@ String spillerPaaKort3 = "ingen,ting";
 
 char val;
 
+int sensorVerdi1 = 0;
+int sensorVerdi2 = 0;
+int sensorVerdi3 = 0;
 
+int sensor1 = A0;
+int sensor2 = A1;
+int sensor3 = A2;
 
 const unsigned long debounceDelay = 500;
 
@@ -35,6 +41,10 @@ unsigned long previousTime3 = 0;
 boolean first = true;
 
 void setup(){
+  pinMode(sensor1, INPUT);
+  pinMode(sensor2, INPUT);
+  pinMode(sensor3, INPUT);
+
   Serial.begin(9600);  // Initiate a serial communication
   SPI.begin();
   leser1.PCD_Init();   // Initiate MFRC522
@@ -49,6 +59,16 @@ void loop() {
   sjekkLeser1(currentTime);
   sjekkLeser2(currentTime);
   sjekkLeser3(currentTime);
+
+  sensorVerdi1 = analogRead(sensor1);
+  sensorVerdi2 = analogRead(sensor2);
+  sensorVerdi3 = analogRead(sensor3);
+  Serial.print("pot1,");
+  Serial.println(sensorVerdi1);
+  Serial.print("pot2,");
+  Serial.println(sensorVerdi2);
+  Serial.print("pot3,");
+  Serial.println(sensorVerdi3);
 
 }
 
