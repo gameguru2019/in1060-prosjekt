@@ -1,0 +1,166 @@
+import processing.serial.*;
+import processing.sound.*;
+import java.util.Map;
+HashMap<String,SoundFile> sanger = new HashMap<String, SoundFile>();
+Serial myPort;
+String val;
+float L;
+SoundFile file;
+SoundFile file2;
+SoundFile file3;
+SoundFile file4;
+SoundFile file5;
+SoundFile file6;
+SoundFile file7;
+SoundFile file8;
+SoundFile file9;
+SoundFile file10;
+SoundFile file11;
+SoundFile file12;
+SoundFile file13;
+
+SoundFile[] spilles;
+float volKnapp1;
+float volKnapp2;
+float volKnapp3;
+// Note the HashMap's "key" is a String and "value" is an Integer
+
+// Putting key-value pairs in the HashMap
+
+
+
+
+
+void setup() {
+  sanger.put("84 AD CB 1E", file = new SoundFile(this, "1.mp3")); //markert
+  sanger.put("71 54 2B 1B", file2 = new SoundFile(this, "BBCTog.wav"));  //markert
+  sanger.put("C2 D1 A4 31", file3 = new SoundFile(this, "Bakgrunnsmusikk5.mp3")); //markert
+  sanger.put("8F 7A 9F 29", file4 = new SoundFile(this, "BBCCrowdedHall.wav")); //markert
+  sanger.put("8F 3F 5E 29", file5 = new SoundFile(this, "BBCStreetScene.wav")); //markert
+  sanger.put("8F BA B4 29", file6 = new SoundFile(this, "Hav1.mp3")); //markert
+  sanger.put("8F 85 24 29", file7 = new SoundFile(this, "InsideHumanOrAnimalBody.wav")); //markert  
+  sanger.put("8F 99 82 29", file8 = new SoundFile(this, "Regn2.mp3")); //markert
+  sanger.put("8F 09 1F 29", file9 = new SoundFile(this, "Skog2.mp3"));  //markert
+  sanger.put("8F 5D E4 29", file10 = new SoundFile(this, "2.mp3")); //markert
+  sanger.put("8F BC 42 29", file11 = new SoundFile(this, "Torden.mp3")); //markert
+  sanger.put("9E E6 18 20", file12 = new SoundFile(this, "Vind1.mp3")); //markert                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+  sanger.put("8F 62 8D 29", file13 = new SoundFile(this, "3.mp3")); //markert
+
+spilles = new SoundFile[3];
+ 
+ 
+ volKnapp1 = 1;
+ volKnapp2 = 0.05;
+ volKnapp3 = 0.01;
+
+  // Using an enhanced loop to iterate over each entry
+for (Map.Entry me : sanger.entrySet()) {
+  print(me.getKey() + " is ");
+  println(me.getValue());
+}
+
+  String portName = Serial.list()[1];
+  myPort = new Serial(this, portName, 9600);
+}
+
+
+
+void draw() {
+
+  if (myPort.available() > 0) {
+    val = myPort.readStringUntil('\n');
+  }
+  
+  if (val != null){
+    spillSang(val);
+  }
+  
+  settVolum1(volKnapp1);
+  settVolum2(volKnapp2);
+  settVolum3(volKnapp3);
+
+}
+
+
+void settVolum1(float volum){
+  if(spilles[0] != null){
+    SoundFile sang = spilles[0];
+    if (sang.isPlaying()){
+      sang.amp(volum);
+    }
+  }
+}
+
+void settVolum2(float volum){
+  if(spilles[1] != null){
+    SoundFile sang = spilles[1];
+    if (sang.isPlaying()){
+      sang.amp(volum);
+    }
+  }
+}
+
+void settVolum3(float volum){
+  if(spilles[2] != null){
+    SoundFile sang = spilles[2];
+    if (sang.isPlaying()){
+      println("JAAAAAAAAAAAAAAAAAAAAAAaaa");
+      sang.amp(volum);
+    }
+  }
+}
+
+
+
+
+void spillSang(String val){
+     println(val);
+
+    if (!trim(val).equals("ingen,ting")&&(!trim(val).equals("Stop"))&&(!trim(val).equals("ing,Stop"))&&(!trim(val).equals("ng,Stop"))){
+    val = trim(val);
+    String[] list = split(val, ',');
+    SoundFile file = sanger.get(list[0]);
+    if (list.length > 1){
+    if (list[1].trim().equals("Play")){
+      println("Success play");
+      if(!file.isPlaying()){
+        file.play();
+        if (list.length == 3){
+          int plass = int(list[2].trim());
+          System.out.println(plass);
+        spilles[plass] = file;
+        }
+      }
+    } else if (list[1].trim().equals("Stop")){
+       println("Success stop");
+       if(file.isPlaying()){
+        file.stop();
+        }
+      }
+    }
+  }
+
+}
+
+/*
+  SoundFile file = sanger.get("71 54 2B 1B");
+  SoundFile file = sanger.get(list[0]);
+        if (val.equals(list[1].equals("Play")))
+
+  
+  
+  if (val != null) {
+       val = trim(val);
+       if (val.equals("71 54 2B 1B")){
+         if (!file.isPlaying()){
+         file.play();
+         }
+       }
+          if (val.equals("Stop")){
+            if (file.isPlaying()){
+         file.stop();
+         }
+       }
+     
+  }
+*/
