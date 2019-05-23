@@ -35,7 +35,7 @@ int sensorVerdi2 = 0;
 int sensorVerdi3 = 0;
 
 // Ventetid for hver gang det sjekkes om et kort er tatt av leseren
-int debounceDelay = 500;
+int debounceDelay = 250;
 
 // Antall millisekunder siden forrige gang et kort ble avlest 
 unsigned long previousTime1 = 0;
@@ -43,7 +43,6 @@ unsigned long previousTime2 = 0;
 unsigned long previousTime3 = 0;
 
 void setup(){
-  
   // Velge potentiometerene som INPUT
   pinMode(sensor1, INPUT);
   pinMode(sensor2, INPUT);
@@ -85,10 +84,7 @@ void loop() {
   Serial.println(sensorVerdi2);
   Serial.print("pot3,");
   Serial.println(sensorVerdi3);
-
 }
-
-
 
 void sjekkLeser1(unsigned long currentTime){
   
@@ -108,7 +104,6 @@ void sjekkLeser1(unsigned long currentTime){
       
       return;
     }
-    
   } else if(leser1.PICC_ReadCardSerial()){
       // Hvis et kort blir lest av, henter vi ID-en til kortet og putter det i variabelen spillerPaaKort1
       String content= "";
@@ -128,7 +123,6 @@ void sjekkLeser1(unsigned long currentTime){
   }
 }
 
-  
 // Denne gjor akkurat det samme som sjekkLeser1 bare for leser2
 void sjekkLeser2(unsigned long currentTime){
   if (!leser2.PICC_IsNewCardPresent() && !leser2.PICC_ReadCardSerial()) {
