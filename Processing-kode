@@ -61,6 +61,7 @@ void setup() {
     print(me.getKey() + " is ");
     println(me.getValue());
   }
+  
   // Legger til rette for serial kommunikasjon med arduinoen
   String portName = Serial.list()[1];
   myPort = new Serial(this, portName, 9600);
@@ -69,6 +70,7 @@ void setup() {
 void draw() {
   // Utforer kun koden dersom arduinoen er tilgjengelig
   if (myPort.available() > 0) {
+  
     // val settes til aa holde paa det som printes fra arduinoen 
     val = myPort.readStringUntil('\n');
     
@@ -77,9 +79,11 @@ void draw() {
     // det er volum fra potentiometer eller en RFID-kode + play/stop-kommando 
     if (val != null){
         val = trim(val);
+        
         // henter verdi fra et gitt potentiometer og setter det i riktig variabel
         // avhengig av hvilket potMeter som det blir lest fra
         hentVolum(val);
+        
         // Finner riktig lydfil basert paa RFID-en og legger sangen inn i spilles-arrayet
         // Hvor i arrayet de blir plassert er avhengig av hvilken RFID-leser kortet ligger paa
         spillSang(val);
@@ -97,6 +101,7 @@ void settVolum1(float volum){
   // Sjekker at det faktisk er en sang paa denne plassen i arrayet
   if(spilles[0] != null){
     SoundFile sang = spilles[0];
+    
     // Sjekker at sangen blir avspilt naa
     if (sang.isPlaying()){
       // Setter volum
@@ -109,6 +114,7 @@ void settVolum2(float volum){
   // Sjekker at det faktisk er en sang paa denne plassen i arrayet
   if(spilles[1] != null){
     SoundFile sang = spilles[1];
+    
     // Sjekker at sangen blir avspilt naa
     if (sang.isPlaying()){
       sang.amp(volum);
@@ -120,6 +126,7 @@ void settVolum3(float volum){
   // Sjekker at det faktisk er en sang paa denne plassen i arrayet
   if(spilles[2] != null){
     SoundFile sang = spilles[2];
+    
     // Sjekker at sangen blir avspilt naa
     if (sang.isPlaying()){
       sang.amp(volum);
@@ -136,10 +143,13 @@ void hentVolum(String val){
   // Dersom forste element i arrayet tilsier at den kommende tallet 
   // tilhorer potentiometer nr1 blir setningen true
   if (potMet[0].equals("pot1")){
+  
     // Try-Catch for aa haandtere det dersom det blir problemer med formatteringen
     try{
+    
       // Endrer strengen fra arrayet til en float-verdi
       float vol1 = Float.parseFloat(potMet[1].trim());
+      
       // sjekker at tallet er innenfor de riktige grensene deretter deles tallet paa 1023 
       // slik at vi faar en float-verdi mellom 0 og 1, og putter det i riktig variabel
       if(vol1 >= 0 &&  vol1 <=1023){
