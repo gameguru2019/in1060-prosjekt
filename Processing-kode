@@ -28,7 +28,7 @@ SoundFile file11;
 SoundFile file12;
 SoundFile file13;
 
-// Array som holder paa sangene som blir spilles naa
+// Array som holder paa sangene som spilles naa
 SoundFile[] spilles;
 
 // Float-verdi mellom 0 og 1 som representerer verdier fra potentiometrene
