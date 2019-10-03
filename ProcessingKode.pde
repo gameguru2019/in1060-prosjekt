@@ -285,13 +285,13 @@ void grafisk(){
 
   pushMatrix();
   translate(350,350);
-  rotate(mapval3+2.75);
+  rotate(mapval2+2.75);
   image(pil2,0,0);
   popMatrix();
 
   pushMatrix();
   translate(550,350);
-  rotate(mapval2+2.75);
+  rotate(mapval3+2.75);
   image(pil3,0,0);
   popMatrix();
 }
